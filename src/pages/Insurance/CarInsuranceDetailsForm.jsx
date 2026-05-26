@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Car,
@@ -27,7 +27,14 @@ const SelectButton = ({ active, onClick, label }) => {
   );
 };
 
-const InputField = ({ label, placeholder, value, onChange, type = "text" }) => {
+const InputField = ({
+  label,
+  placeholder,
+  value,
+  onChange,
+  type = "text",
+  error,
+}) => {
   return (
     <div>
       <label className="mb-2 block text-[13px] font-semibold text-[#0F172A]">
@@ -39,13 +46,27 @@ const InputField = ({ label, placeholder, value, onChange, type = "text" }) => {
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="h-[52px] w-full rounded-[16px] border border-[#DCE6F5] bg-[#FBFCFF] px-4 text-[14px] font-medium text-[#111827] outline-none transition-all focus:border-[#2563EB] focus:bg-white"
+        autoComplete="off"
+        className={`h-[52px] w-full rounded-[16px] border bg-[#FBFCFF] px-4 text-[14px] font-medium text-[#111827] outline-none transition-all focus:bg-white
+        ${
+          error
+            ? "border-red-500 focus:border-red-500"
+            : "border-[#DCE6F5] focus:border-[#2563EB]"
+        }`}
       />
+      {error && <p className="mt-1 text-[12px] text-red-500">{error}</p>}
     </div>
   );
 };
 
-const SelectField = ({ label, value, onChange, placeholder, options }) => {
+const SelectField = ({
+  label,
+  value,
+  onChange,
+  placeholder,
+  options,
+  error,
+}) => {
   return (
     <div>
       <label className="mb-2 block text-[13px] font-semibold text-[#0F172A]">
@@ -55,7 +76,12 @@ const SelectField = ({ label, value, onChange, placeholder, options }) => {
       <select
         value={value}
         onChange={onChange}
-        className="h-[52px] w-full rounded-[16px] border border-[#DCE6F5] bg-[#FBFCFF] px-4 text-[14px] font-medium text-[#111827] outline-none transition-all focus:border-[#2563EB]"
+        className={`h-[52px] w-full rounded-[16px] border bg-[#FBFCFF] px-4 text-[14px] font-medium text-[#111827] outline-none transition-all
+        ${
+          error
+            ? "border-red-500 focus:border-red-500"
+            : "border-[#DCE6F5] focus:border-[#2563EB]"
+        }`}
       >
         <option value="">{placeholder}</option>
 
@@ -65,8 +91,40 @@ const SelectField = ({ label, value, onChange, placeholder, options }) => {
           </option>
         ))}
       </select>
+      {error && <p className="mt-1 text-[12px] text-red-500">{error}</p>}
     </div>
   );
+};
+
+const fieldConfigs = {
+  ownerName: {
+    regex: /[^A-Za-z\s]/g,
+    maxLength: 40,
+    type: "text",
+  },
+
+  city: {
+    regex: /[^A-Za-z\s]/g,
+    maxLength: 40,
+    type: "text",
+  },
+
+  mobile: {
+    regex: /\D/g,
+    maxLength: 10,
+    type: "number",
+  },
+
+  pincode: {
+    regex: /\D/g,
+    maxLength: 6,
+    type: "number",
+  },
+
+  email: {
+    maxLength: 60,
+    type: "email",
+  },
 };
 
 const CarInsuranceDetailsForm = () => {
@@ -76,21 +134,98 @@ const CarInsuranceDetailsForm = () => {
     ownerName: "",
     mobile: "",
     email: "",
-    carModel: "Kia Sonet",
-    variant: "1.0 GTX Plus DCT",
-    registration: "MH47BP8265",
-    year: "2024",
     fuelType: "",
     previousClaim: "",
     ownership: "",
     city: "",
   });
+  const navigate = useNavigate();
+
+  const [errors, setErrors] = useState({});
 
   const handleChange = (field, value) => {
+    value = value.trimStart();
+
+    const config = fieldConfigs[field];
+
+    if (config) {
+      if (config.regex) {
+        value = value.replace(config.regex, "");
+      }
+
+      if (config.type === "text") {
+        value = value.replace(/\s+/g, " ");
+      }
+
+      if (config.maxLength) {
+        value = value.slice(0, config.maxLength);
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [field]: "",
+    }));
+  };
+
+  const validateForm = () => {
+    let newErrors = {};
+
+    const validations = {
+      policyExpired: !formData.policyExpired && "Please select policy status",
+
+      previousClaim:
+        !formData.previousClaim && "Please select previous claim status",
+
+      fuelType: !formData.fuelType && "Select fuel type",
+
+      ownership: !formData.ownership && "Select ownership type",
+
+      ownerName: !formData.ownerName
+        ? "Owner name is required"
+        : !/^[A-Za-z]+(?:\s[A-Za-z]+)*$/.test(formData.ownerName)
+          ? "Only alphabets allowed"
+          : "",
+
+      mobile: !formData.mobile
+        ? "Mobile number is required"
+        : !/^[6-9][0-9]{9}$/.test(formData.mobile)
+          ? "Enter valid mobile number"
+          : "",
+
+      email: !formData.email
+        ? "Email is required"
+        : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+          ? "Enter valid email"
+          : "",
+
+      pincode: !formData.pincode
+        ? "Pincode is required"
+        : !/^[0-9]{6}$/.test(formData.pincode)
+          ? "Enter valid 6 digit pincode"
+          : "",
+
+      city: !formData.city
+        ? "City is required"
+        : !/^[A-Za-z]+(?:\s[A-Za-z]+)*$/.test(formData.city)
+          ? "Only alphabets allowed"
+          : "",
+    };
+
+    Object.keys(validations).forEach((key) => {
+      if (validations[key]) {
+        newErrors[key] = validations[key];
+      }
+    });
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
   return (
@@ -206,35 +341,40 @@ const CarInsuranceDetailsForm = () => {
               {/* CAR CARD */}
               <div className="mt-8 rounded-[24px] border border-[#DCE6F5] bg-gradient-to-r from-[#EEF5FF] to-[#F8FBFF] p-5">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-[18px] bg-white shadow-sm">
-                      <Car className="h-8 w-8 text-[#2563EB]" />
+                  <div className="flex items-center gap-5">
+                    {/* ICON */}
+                    <div className="flex h-18 w-18 items-center justify-center rounded-[22px] bg-white shadow-sm border border-[#E2ECFF]">
+                      <Car className="h-9 w-9 text-[#2563EB]" />
                     </div>
 
+                    {/* CONTENT */}
                     <div>
-                      <h3 className="text-[20px] font-bold text-[#111827]">
-                        {formData.carModel}
+                      <h3 className="text-[24px] font-bold tracking-[-0.5px] text-[#111827]">
+                        Car Insurance Journey
                       </h3>
 
-                      <p className="mt-1 text-[13px] font-medium text-[#64748B]">
-                        {formData.registration}
+                      <p className="mt-2 max-w-[500px] text-[13px] leading-6 text-[#64748B]">
+                        Complete your details to unlock personalised car
+                        insurance plans, premium pricing and policy benefits
+                        instantly.
                       </p>
 
+                      {/* TAGS */}
                       <div className="mt-4 flex flex-wrap gap-3">
-                        <div className="rounded-full bg-white px-4 py-2 text-[12px] font-semibold text-[#111827]">
-                          {formData.variant}
+                        <div className="rounded-full border border-[#DCE6F5] bg-white px-4 py-2 text-[12px] font-semibold text-[#111827]">
+                          Instant Quotes
                         </div>
 
-                        <div className="rounded-full bg-white px-4 py-2 text-[12px] font-semibold text-[#111827]">
-                          Registration year {formData.year}
+                        <div className="rounded-full border border-[#DCE6F5] bg-white px-4 py-2 text-[12px] font-semibold text-[#111827]">
+                          Secure Process
+                        </div>
+
+                        <div className="rounded-full border border-[#DCE6F5] bg-white px-4 py-2 text-[12px] font-semibold text-[#111827]">
+                          Zero Paperwork
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  <button className="text-[14px] font-semibold text-[#2563EB]">
-                    Edit
-                  </button>
                 </div>
               </div>
 
@@ -268,6 +408,11 @@ const CarInsuranceDetailsForm = () => {
                         label="No"
                       />
                     </div>
+                    {errors.policyExpired && (
+                      <p className="mt-1 text-[12px] text-red-500">
+                        {errors.policyExpired}
+                      </p>
+                    )}
                   </div>
 
                   {/* PREVIOUS CLAIM */}
@@ -289,11 +434,17 @@ const CarInsuranceDetailsForm = () => {
                         label="No"
                       />
                     </div>
+                    {errors.previousClaim && (
+                      <p className="mt-1 text-[12px] text-red-500">
+                        {errors.previousClaim}
+                      </p>
+                    )}
                   </div>
 
                   {/* FUEL TYPE */}
                   <SelectField
                     label="Fuel type"
+                    error={errors.fuelType}
                     value={formData.fuelType}
                     onChange={(e) => handleChange("fuelType", e.target.value)}
                     placeholder="Select fuel type"
@@ -303,6 +454,7 @@ const CarInsuranceDetailsForm = () => {
                   {/* OWNERSHIP */}
                   <SelectField
                     label="Ownership type"
+                    error={errors.ownership}
                     value={formData.ownership}
                     onChange={(e) => handleChange("ownership", e.target.value)}
                     placeholder="Select ownership"
@@ -324,6 +476,7 @@ const CarInsuranceDetailsForm = () => {
                 <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-5">
                   <InputField
                     label="Owner full name"
+                    error={errors.ownerName}
                     placeholder="Enter full name"
                     value={formData.ownerName}
                     onChange={(e) => handleChange("ownerName", e.target.value)}
@@ -331,6 +484,7 @@ const CarInsuranceDetailsForm = () => {
 
                   <InputField
                     label="Mobile number"
+                    error={errors.mobile}
                     placeholder="+91 9876543210"
                     value={formData.mobile}
                     onChange={(e) => handleChange("mobile", e.target.value)}
@@ -338,6 +492,7 @@ const CarInsuranceDetailsForm = () => {
 
                   <InputField
                     label="Email address"
+                    error={errors.email}
                     placeholder="example@gmail.com"
                     value={formData.email}
                     onChange={(e) => handleChange("email", e.target.value)}
@@ -345,6 +500,7 @@ const CarInsuranceDetailsForm = () => {
 
                   <InputField
                     label="Pincode"
+                    error={errors.pincode}
                     placeholder="400043"
                     value={formData.pincode}
                     onChange={(e) => handleChange("pincode", e.target.value)}
@@ -352,6 +508,7 @@ const CarInsuranceDetailsForm = () => {
 
                   <InputField
                     label="City"
+                    error={errors.city}
                     placeholder="Mumbai"
                     value={formData.city}
                     onChange={(e) => handleChange("city", e.target.value)}
@@ -410,12 +567,23 @@ const CarInsuranceDetailsForm = () => {
                   </p>
                 </div>
 
-                <Link to="/insurance-plans">
-                  <button className="flex h-[54px] items-center gap-2 rounded-[18px] bg-[#16A34A] px-8 text-[15px] font-semibold text-white transition-all duration-300 hover:bg-[#15803D] hover:shadow-lg cursor-pointer">
-                    View plans
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
-                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (validateForm()) {
+                      navigate("/insurance-plans", {
+                        state: {
+                          category: "car",
+                          formData,
+                        },
+                      });
+                    }
+                  }}
+                  className="flex h-[54px] items-center gap-2 rounded-[18px] bg-[#16A34A] px-8 text-[15px] font-semibold text-white transition-all duration-300 hover:bg-[#15803D] hover:shadow-lg cursor-pointer"
+                >
+                  View plans
+                  <ChevronRight className="h-5 w-5" />
+                </button>
               </div>
             </div>
           </div>

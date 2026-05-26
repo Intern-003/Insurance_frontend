@@ -1,33 +1,56 @@
-import { ArrowLeft, ChevronDown, Heart, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useGet } from "../hooks/useGet";
 
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { ArrowLeft, ChevronDown, Heart, Check } from "lucide-react";
 
 const CustomizeInsurancePlan = () => {
   const navigate = useNavigate();
 
+  const location = useLocation();
+
+  const { slug } = location.state || {};
+
+  const {
+    data: planResponse,
+    loading,
+    error,
+  } = useGet(slug ? `insurance-plan/${slug}` : null);
+
+  const plan = planResponse?.plan;
+
+  const coverOptions =
+    plan?.coverages?.map((item) => ({
+      id: item.id,
+      cover: item.coverage_name,
+      premium: Number(item.one_year_price),
+      oneYear: Number(item.one_year_price),
+      twoYear: Number(item.two_year_price),
+      threeYear: Number(item.three_year_price),
+    })) || [];
+
   /* COVER OPTIONS */
-  const coverOptions = [
-    {
-      cover: "₹5 Lakh",
-      premium: 5305,
-    },
+  // const coverOptions = [
+  //   {
+  //     cover: "₹5 Lakh",
+  //     premium: 5305,
+  //   },
 
-    {
-      cover: "₹7.5 Lakh",
-      premium: 5526,
-    },
+  //   {
+  //     cover: "₹7.5 Lakh",
+  //     premium: 5526,
+  //   },
 
-    {
-      cover: "₹10 Lakh",
-      premium: 5391,
-    },
+  //   {
+  //     cover: "₹10 Lakh",
+  //     premium: 5391,
+  //   },
 
-    {
-      cover: "₹15 Lakh",
-      premium: 6081,
-    },
-  ];
+  //   {
+  //     cover: "₹15 Lakh",
+  //     premium: 6081,
+  //   },
+  // ];
 
   /* POLICY OPTIONS */
   const periods = [
@@ -52,17 +75,35 @@ const CustomizeInsurancePlan = () => {
   ];
 
   /* STATES */
-  const [selectedCover, setSelectedCover] = useState(coverOptions[1]);
+  const [selectedCover, setSelectedCover] = useState(null);
 
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0]);
 
   const [showCoverDropdown, setShowCoverDropdown] = useState(false);
 
   /* PRICE */
-  const totalPremium = Math.round(
-    selectedCover.premium * selectedPeriod.multiplier,
-  );
+  const totalPremium =
+    selectedPeriod.year === "1 Year"
+      ? selectedCover?.oneYear || 0
+      : selectedPeriod.year === "2 Years"
+        ? selectedCover?.twoYear || 0
+        : selectedCover?.threeYear || 0;
 
+  useEffect(() => {
+    if (coverOptions.length > 0 && !selectedCover) {
+      setSelectedCover(coverOptions[0]);
+    }
+  }, [coverOptions]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-[15px] font-semibold text-[#64748B]">
+          Loading plan...
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-[#F4F7FB]">
       {/* HEADER */}
@@ -91,7 +132,7 @@ const CustomizeInsurancePlan = () => {
             <div className="flex items-center gap-4">
               <div className="flex h-[58px] w-[58px] items-center justify-center rounded-[14px] border border-[#E5EDF8] bg-[#FCFDFF]">
                 <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/1/1b/TATA_AIG_General_Insurance_Logo.png"
+                  src={plan?.logo_url}
                   alt="logo"
                   className="h-7 object-contain"
                 />
@@ -100,7 +141,7 @@ const CustomizeInsurancePlan = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-[18px] font-bold text-[#111827]">
-                    Medicare Select
+                    {plan?.plan_name}
                   </h2>
 
                   <button className="flex h-7 w-7 items-center justify-center rounded-full border border-[#E2E8F0]">
@@ -117,7 +158,7 @@ const CustomizeInsurancePlan = () => {
 
                   <p className="text-[#475569]">
                     <span className="font-semibold text-[#16A34A]">
-                      302 Cashless hospitals
+                      {plan?.cashless_hospitals} Cashless hospitals
                     </span>{" "}
                     (+Cashless anywhere support)
                   </p>
@@ -149,7 +190,7 @@ const CustomizeInsurancePlan = () => {
                 className="flex h-[56px] w-full items-center justify-between rounded-[14px] border border-[#CBD5E1] bg-white px-4 transition-all duration-300 hover:border-[#2563EB]"
               >
                 <span className="text-[16px] font-bold text-[#111827]">
-                  {selectedCover.cover}
+                  {selectedCover?.cover || "Select cover"}
                 </span>
 
                 <ChevronDown
@@ -200,9 +241,12 @@ const CustomizeInsurancePlan = () => {
             {/* OPTIONS */}
             <div className="mt-4 grid gap-3 lg:grid-cols-3">
               {periods.map((item, index) => {
-                const calculatedPrice = Math.round(
-                  selectedCover.premium * item.multiplier,
-                );
+                const calculatedPrice =
+                  item.year === "1 Year"
+                    ? selectedCover?.oneYear
+                    : item.year === "2 Years"
+                      ? selectedCover?.twoYear
+                      : selectedCover?.threeYear;
 
                 return (
                   <button
@@ -242,7 +286,7 @@ const CustomizeInsurancePlan = () => {
                         </h4>
 
                         <p className="mt-1 text-[21px] font-black tracking-[-1px] text-[#1E293B]">
-                          ₹{calculatedPrice.toLocaleString()}
+                          ₹{calculatedPrice?.toLocaleString?.() || 0}
                         </p>
 
                         {item.save && (
@@ -265,29 +309,13 @@ const CustomizeInsurancePlan = () => {
             </h3>
 
             <div className="mt-4 space-y-3">
-              <div className="flex items-center gap-3">
-                <Check className="h-4 w-4 text-[#2563EB]" />
+              {plan?.features?.map((item) => (
+                <div key={item.id} className="flex items-center gap-3">
+                  <Check className="h-4 w-4 text-[#2563EB]" />
 
-                <p className="text-[13px] text-[#475569]">
-                  Unlimited restoration benefits
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Check className="h-4 w-4 text-[#2563EB]" />
-
-                <p className="text-[13px] text-[#475569]">
-                  Better hospital coverage support
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Check className="h-4 w-4 text-[#2563EB]" />
-
-                <p className="text-[13px] text-[#475569]">
-                  Faster claim settlement guidance
-                </p>
-              </div>
+                  <p className="text-[13px] text-[#475569]">{item.feature}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>

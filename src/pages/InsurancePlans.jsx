@@ -1,4 +1,6 @@
 import { useLocation } from "react-router-dom";
+import { useGet } from "../hooks/useGet";
+
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -8,7 +10,6 @@ import {
   PhoneCall,
   Check,
   SlidersHorizontal,
-  Star,
 } from "lucide-react";
 
 import logo from "../assets/images/logo.png";
@@ -19,96 +20,13 @@ const InsurancePlans = () => {
 
   const { category, formData } = location.state || {};
 
-  const demoPlans = [
-    {
-      id: 1,
-      company: "Care Health Insurance",
-      plan: "Ultimate Care Supreme",
-      cover: "₹10 Lakh",
-      premium: "₹749/month",
-      hospitals: "299 Cashless hospitals",
-      features: [
-        "No Room Rent Limit",
-        "Unlimited Restoration",
-        "₹10 lakh yearly bonus",
-        "Daycare treatments covered",
-      ],
-      badge: "Recommended",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Care_Health_Insurance_logo.png",
-      color: "border-[#FACC15]",
-    },
+  const {
+    data: plansResponse,
+    loading,
+    error,
+  } = useGet(category ? `insurance-plans/${category}` : null);
 
-    {
-      id: 2,
-      company: "ICICI Lombard",
-      plan: "Elevate Smart",
-      cover: "₹10 Lakh",
-      premium: "₹442/month",
-      hospitals: "167 Cashless hospitals",
-      features: [
-        "20% Co-pay outside network",
-        "Twin sharing room",
-        "₹2 lakh no claim bonus",
-        "Unlimited restoration",
-      ],
-      badge: "Fast Claim",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/0/0c/ICICI_Lombard_logo.png",
-      color: "border-[#FB923C]",
-    },
-
-    {
-      id: 3,
-      company: "TATA AIG",
-      plan: "Medicare Select",
-      cover: "₹10 Lakh",
-      premium: "₹450/month",
-      hospitals: "302 Cashless hospitals",
-      features: [
-        "Single private AC room",
-        "Young family discount",
-        "Unlimited restoration",
-        "₹5 lakh no claim bonus",
-      ],
-      badge: "Popular",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/7/70/Tata_AIG_Logo.png",
-      color: "border-[#60A5FA]",
-    },
-
-    {
-      id: 4,
-      company: "TATA AIG",
-      plan: "Medicare Select",
-      cover: "₹10 Lakh",
-      premium: "₹450/month",
-      hospitals: "302 Cashless hospitals",
-      features: [
-        "Single private AC room",
-        "Young family discount",
-        "Unlimited restoration",
-        "₹5 lakh no claim bonus",
-      ],
-      badge: "Popular",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/7/70/Tata_AIG_Logo.png",
-      color: "border-[#60A5FA]",
-    },
-    {
-      id: 5,
-      company: "TATA AIG",
-      plan: "Medicare Select",
-      cover: "₹10 Lakh",
-      premium: "₹450/month",
-      hospitals: "302 Cashless hospitals",
-      features: [
-        "Single private AC room",
-        "Young family discount",
-        "Unlimited restoration",
-        "₹5 lakh no claim bonus",
-      ],
-      badge: "Popular",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/7/70/Tata_AIG_Logo.png",
-      color: "border-[#60A5FA]",
-    },
-  ];
+  const plans = plansResponse?.plans || [];
 
   return (
     <div className="min-h-screen bg-[#F5F7FB]">
@@ -188,7 +106,7 @@ const InsurancePlans = () => {
             <div className="h-7 w-1 rounded-full bg-[#2563EB]" />
 
             <h2 className="text-[24px] font-bold tracking-[-1px] text-[#111827]">
-              {demoPlans.length} plans found
+              {plans.length} plans found
             </h2>
           </div>
 
@@ -210,128 +128,153 @@ const InsurancePlans = () => {
           </div>
 
           {/* PLAN CARDS */}
-          <div className="space-y-5">
-            {demoPlans.map((plan) => (
-              <div className="overflow-hidden rounded-[18px] border border-[#E5EDF8] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(37,99,235,0.08)]">
-                <div className="grid grid-cols-[120px_1fr_250px]">
-                  {/* LEFT */}
-                  <div className="flex flex-col justify-between border-r border-[#EEF2F7] p-4">
-                    <div className="flex h-[54px] items-center justify-center rounded-[12px] border border-[#E5EDF8] bg-[#FCFDFF]">
-                      <img
-                        src={plan.logo}
-                        alt={plan.company}
-                        className="h-7 object-contain"
-                      />
-                    </div>
-
-                    <button className="mt-4 text-left text-[12px] font-semibold text-[#111827] transition-all duration-300 hover:text-[#2563EB]">
-                      About Insurer
-                    </button>
-                  </div>
-
-                  {/* CENTER */}
-                  <div className="p-4">
-                    {/* TITLE */}
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <h3 className="truncate text-[18px] font-bold tracking-[-0.4px] text-[#1E293B]">
-                          {plan.plan}
-                        </h3>
-
-                        {/* HOSPITAL */}
-                        <div className="mt-1.5 flex items-center gap-1.5 text-[12px] text-[#475569]">
-                          <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-[#22C55E]" />
-
-                          <span className="truncate">{plan.hospitals}</span>
-
-                          <button className="shrink-0 font-semibold text-[#16A34A]">
-                            View list ›
-                          </button>
-                        </div>
+          {loading && (
+            <div className="flex h-[300px] items-center justify-center rounded-[24px] border border-[#E5EDF8] bg-white">
+              <p className="text-[15px] font-semibold text-[#64748B]">
+                Loading plans...
+              </p>
+            </div>
+          )}
+          {error && (
+            <div className="flex h-[200px] items-center justify-center rounded-[24px] border border-red-100 bg-white">
+              <p className="text-[14px] font-semibold text-red-500">{error}</p>
+            </div>
+          )}
+          {!loading && !error && (
+            <div className="space-y-5">
+              {plans.map((plan) => (
+                <div
+                  key={plan.id}
+                  className="overflow-hidden rounded-[18px] border border-[#E5EDF8] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(37,99,235,0.08)]"
+                >
+                  <div className="grid grid-cols-[120px_1fr_250px]">
+                    {/* LEFT */}
+                    <div className="flex flex-col justify-between border-r border-[#EEF2F7] p-4">
+                      <div className="flex h-[54px] items-center justify-center rounded-[12px] border border-[#E5EDF8] bg-[#FCFDFF]">
+                        <img
+                          src={plan.logo_url}
+                          alt={plan.company}
+                          className="h-7 object-contain"
+                        />
                       </div>
 
-                      <button className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#E2E8F0] transition-all duration-300 hover:bg-[#F8FAFC]">
-                        <Heart className="h-3.5 w-3.5 text-[#64748B]" />
+                      <button className="mt-4 text-left text-[12px] font-semibold text-[#111827] transition-all duration-300 hover:text-[#2563EB]">
+                        About Insurer
                       </button>
                     </div>
 
-                    {/* FEATURES */}
-                    <div className="mt-4 space-y-2">
-                      {plan.features.slice(0, 3).map((feature, index) => (
-                        <div key={index} className="flex items-start gap-2">
-                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#22C55E]" />
-
-                          <p className="text-[12px] leading-5 text-[#475569]">
-                            {feature}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* FOOTER */}
-                    <div className="mt-4">
-                      <button className="text-[12px] font-semibold text-[#16A34A] transition-all duration-300 hover:text-[#15803D]">
-                        View all features ›
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* RIGHT */}
-                  <div className="flex flex-col justify-between border-l border-[#EEF2F7] bg-[#FCFDFF] p-4">
-                    {/* TOP */}
-                    <div className="flex items-start justify-between gap-3">
-                      {/* COVER */}
-                      <div>
-                        <p className="text-[11px] text-[#64748B]">
-                          Cover amount
-                        </p>
-
-                        <div className="mt-1 flex items-center gap-1">
-                          <h3 className="text-[20px] font-bold tracking-[-0.5px] text-[#1E293B]">
-                            {plan.cover}
+                    {/* CENTER */}
+                    <div className="p-4">
+                      {/* TITLE */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <h3 className="truncate text-[18px] font-bold tracking-[-0.4px] text-[#1E293B]">
+                            {plan.plan_name}
                           </h3>
 
-                          <ChevronDown className="h-3.5 w-3.5 text-[#64748B]" />
+                          {/* HOSPITAL */}
+                          <div className="mt-1.5 flex items-center gap-1.5 text-[12px] text-[#475569]">
+                            <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-[#22C55E]" />
+
+                            <span className="truncate">
+                              {plan.cashless_hospitals} Cashless hospitals
+                            </span>
+
+                            <button className="shrink-0 font-semibold text-[#16A34A]">
+                              View list ›
+                            </button>
+                          </div>
                         </div>
+
+                        <button className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#E2E8F0] transition-all duration-300 hover:bg-[#F8FAFC]">
+                          <Heart className="h-3.5 w-3.5 text-[#64748B]" />
+                        </button>
                       </div>
 
-                      {/* PREMIUM */}
-                      <div>
-                        <p className="text-[11px] text-[#64748B]">
-                          Starting from
-                        </p>
+                      {/* FEATURES */}
+                      <div className="mt-4 space-y-2">
+                        {plan.features?.slice(0, 3).map((feature, index) => (
+                          <div key={index} className="flex items-start gap-2">
+                            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#22C55E]" />
 
-                        <h3 className="mt-1 text-[20px] font-bold tracking-[-0.5px] text-[#1E293B]">
-                          {plan.premium}
-                        </h3>
+                            <p className="text-[12px] leading-5 text-[#475569]">
+                              {feature.feature}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
 
-                        <p className="mt-0.5 text-[11px] text-[#94A3B8]">
-                          ₹4,417 annually
-                        </p>
+                      {/* FOOTER */}
+                      <div className="mt-4">
+                        <button className="text-[12px] font-semibold text-[#16A34A] transition-all duration-300 hover:text-[#15803D]">
+                          View all features ›
+                        </button>
                       </div>
                     </div>
 
-                    {/* BUTTON */}
-                    <button
-                      onClick={() => navigate("/customize-insurance-plan")}
-                      className="mt-5 flex h-[42px] w-full items-center justify-center rounded-[12px] bg-[#2563EB] text-[13px] font-semibold text-white shadow-[0_8px_18px_rgba(37,99,235,0.22)] transition-all duration-300 hover:bg-[#1D4ED8] hover:shadow-[0_12px_24px_rgba(37,99,235,0.30)] cursor-pointer"
-                    >
-                      Check Premium ›
-                    </button>
+                    {/* RIGHT */}
+                    <div className="flex flex-col justify-between border-l border-[#EEF2F7] bg-[#FCFDFF] p-4">
+                      {/* TOP */}
+                      <div className="flex items-start justify-between gap-3">
+                        {/* COVER */}
+                        <div>
+                          <p className="text-[11px] text-[#64748B]">
+                            Cover amount
+                          </p>
 
-                    {/* BOTTOM */}
-                    <div className="mt-4 flex items-center justify-end gap-2">
-                      <div className="h-4 w-4 rounded-full border border-[#CBD5E1]" />
+                          <div className="mt-1 flex items-center gap-1">
+                            <h3 className="text-[20px] font-bold tracking-[-0.5px] text-[#1E293B]">
+                              {plan.coverages?.[0]?.coverage_name || "N/A"}
+                            </h3>
 
-                      <span className="text-[12px] font-medium text-[#475569]">
-                        Add compare
-                      </span>
+                            <ChevronDown className="h-3.5 w-3.5 text-[#64748B]" />
+                          </div>
+                        </div>
+
+                        {/* PREMIUM */}
+                        <div>
+                          <p className="text-[11px] text-[#64748B]">
+                            Starting from
+                          </p>
+
+                          <h3 className="mt-1 text-[20px] font-bold tracking-[-0.5px] text-[#1E293B]">
+                            {plan.formatted_starting_price}
+                          </h3>
+
+                          <p className="mt-0.5 text-[11px] text-[#94A3B8]">
+                            ₹4,417 annually
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* BUTTON */}
+                      <button
+                        onClick={() =>
+                          navigate("/customize-insurance-plan", {
+                            state: {
+                              slug: plan.slug,
+                            },
+                          })
+                        }
+                        className="mt-5 flex h-[42px] w-full items-center justify-center rounded-[12px] bg-[#2563EB] text-[13px] font-semibold text-white shadow-[0_8px_18px_rgba(37,99,235,0.22)] transition-all duration-300 hover:bg-[#1D4ED8] hover:shadow-[0_12px_24px_rgba(37,99,235,0.30)] cursor-pointer"
+                      >
+                        Check Premium ›
+                      </button>
+
+                      {/* BOTTOM */}
+                      <div className="mt-4 flex items-center justify-end gap-2">
+                        <div className="h-4 w-4 rounded-full border border-[#CBD5E1]" />
+
+                        <span className="text-[12px] font-medium text-[#475569]">
+                          Add compare
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* RIGHT */}
