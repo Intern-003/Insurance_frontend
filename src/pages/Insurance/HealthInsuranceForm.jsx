@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   ChevronRight,
@@ -13,6 +13,26 @@ import {
 
 import Header from "../../components/Header";
 
+const fieldConfigs = {
+  city: {
+    regex: /[^A-Za-z\s]/g,
+    maxLength: 40,
+    type: "text",
+  },
+
+  fullName: {
+    regex: /[^A-Za-z\s]/g,
+    maxLength: 40,
+    type: "text",
+  },
+
+  mobile: {
+    regex: /\D/g,
+    maxLength: 10,
+    type: "number",
+  },
+};
+
 const HealthInsuranceForm = () => {
   const [gender, setGender] = useState("Male");
 
@@ -24,6 +44,9 @@ const HealthInsuranceForm = () => {
     fullName: "",
     mobile: "",
   });
+  const navigate = useNavigate();
+
+  const [errors, setErrors] = useState({});
 
   const familyMembers = ["Self", "Wife", "Son", "Daughter", "Father", "Mother"];
 
@@ -35,6 +58,72 @@ const HealthInsuranceForm = () => {
     } else {
       setMembers([...members, member]);
     }
+  };
+
+  const handleChange = (field, value) => {
+    value = value.trimStart();
+
+    const config = fieldConfigs[field];
+
+    if (config) {
+      if (config.regex) {
+        value = value.replace(config.regex, "");
+      }
+
+      if (config.type === "text") {
+        value = value.replace(/\s+/g, " ");
+      }
+
+      if (config.maxLength) {
+        value = value.slice(0, config.maxLength);
+      }
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [field]: "",
+    }));
+  };
+
+  const validateForm = () => {
+    let newErrors = {};
+
+    const validations = {
+      city: !formData.city
+        ? "City is required"
+        : !/^[A-Za-z]+(?:\s[A-Za-z]+)*$/.test(formData.city)
+          ? "Only alphabets allowed"
+          : "",
+
+      fullName: !formData.fullName
+        ? "Full name is required"
+        : !/^[A-Za-z]+(?:\s[A-Za-z]+)*$/.test(formData.fullName)
+          ? "Only alphabets allowed"
+          : "",
+
+      mobile: !formData.mobile
+        ? "Mobile number is required"
+        : !/^[6-9][0-9]{9}$/.test(formData.mobile)
+          ? "Enter valid mobile number"
+          : "",
+
+      members: members.length === 0 && "Select at least one family member",
+    };
+
+    Object.keys(validations).forEach((key) => {
+      if (validations[key]) {
+        newErrors[key] = validations[key];
+      }
+    });
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
   return (
@@ -242,15 +331,20 @@ const HealthInsuranceForm = () => {
                   <input
                     type="text"
                     value={formData.city}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        city: e.target.value,
-                      })
-                    }
+                    onChange={(e) => handleChange("city", e.target.value)}
                     placeholder="Search your city"
-                    className="h-[56px] w-full rounded-[18px] border border-[#DCE6F5] bg-[#FBFDFF] pl-12 pr-4 text-[15px] font-medium text-[#111827] outline-none focus:border-[#2563EB]"
+                    className={`h-[56px] w-full rounded-[18px] border bg-[#FBFDFF] pl-12 pr-4 text-[15px] font-medium text-[#111827] outline-none
+                    ${
+                      errors.city
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-[#DCE6F5] focus:border-[#2563EB]"
+                    }`}
                   />
+                  {errors.city && (
+                    <p className="mt-1 text-[12px] text-red-500">
+                      {errors.city}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-3">
@@ -283,14 +377,14 @@ const HealthInsuranceForm = () => {
                   <input
                     type="text"
                     value={formData.fullName}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        fullName: e.target.value,
-                      })
-                    }
+                    onChange={(e) => handleChange("fullName", e.target.value)}
                     placeholder="Enter your full name"
-                    className="h-[56px] w-full rounded-[18px] border border-[#DCE6F5] bg-[#FBFDFF] pl-12 pr-4 text-[15px] font-medium text-[#111827] outline-none focus:border-[#2563EB]"
+                    className={`h-[56px] w-full rounded-[18px] border bg-[#FBFDFF] pl-12 pr-4 text-[15px] font-medium text-[#111827] outline-none
+                    ${
+                      errors.fullName
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-[#DCE6F5] focus:border-[#2563EB]"
+                    }`}
                   />
                 </div>
               </div>
@@ -307,15 +401,20 @@ const HealthInsuranceForm = () => {
                   <input
                     type="text"
                     value={formData.mobile}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        mobile: e.target.value,
-                      })
-                    }
+                    onChange={(e) => handleChange("mobile", e.target.value)}
                     placeholder="+91 9876543210"
-                    className="h-[56px] w-full rounded-[18px] border border-[#DCE6F5] bg-[#FBFDFF] pl-12 pr-4 text-[15px] font-medium text-[#111827] outline-none focus:border-[#2563EB]"
+                    className={`h-[56px] w-full rounded-[18px] border bg-[#FBFDFF] pl-12 pr-4 text-[15px] font-medium text-[#111827] outline-none
+                    ${
+                      errors.mobile
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-[#DCE6F5] focus:border-[#2563EB]"
+                    }`}
                   />
+                  {errors.mobile && (
+                    <p className="mt-1 text-[12px] text-red-500">
+                      {errors.mobile}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -340,12 +439,23 @@ const HealthInsuranceForm = () => {
               </div>
 
               {/* BUTTON */}
-              <Link to="/insurance-plans">
-                <button className="mt-8 flex h-[56px] w-full items-center justify-center gap-2 rounded-[18px] bg-[#111827] text-[15px] font-semibold text-white transition-all hover:bg-black">
-                  Continue
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  if (validateForm()) {
+                    navigate("/insurance-plans", {
+                      state: {
+                        category: "health",
+                        formData,
+                      },
+                    });
+                  }
+                }}
+                className="mt-8 flex h-[56px] w-full items-center justify-center gap-2 rounded-[18px] bg-[#111827] text-[15px] font-semibold text-white transition-all hover:bg-black"
+              >
+                Continue
+                <ChevronRight className="h-5 w-5" />
+              </button>
 
               <p className="mt-4 text-center text-[12px] leading-6 text-[#64748B]">
                 By continuing, you agree to our Terms & Conditions and Privacy
