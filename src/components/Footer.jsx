@@ -1,178 +1,169 @@
-import { Shield, Phone, Mail, MapPin } from "lucide-react";
+import {
+  ShieldCheck,
+  ChevronDown,
+} from "lucide-react";
+
+import logo from "../assets/images/logo.png";
+
+const footerLinks = {
+  Products: [
+    "Car insurance",
+    "Bike insurance",
+    "Health insurance",
+    "Life insurance",
+    "Travel insurance",
+  ],
+
+  Company: [
+    "About us",
+    "Careers",
+    "Contact us",
+  ],
+
+  Resources: [
+    "All resources",
+    "Customer stories",
+    "Articles",
+    "E-books",
+  ],
+
+  Legal: [
+    "Privacy policy",
+    "Terms & conditions",
+    "Financial disclosures",
+  ],
+};
+
+const accordions = [
+  "Auto products and services",
+  "Health, life and other services",
+  "Insurace Policy",
+  "Claims and support",
+];
 
 const Footer = () => {
   return (
-    <footer className="bg-[#020817] text-white">
-      <div className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
-        {/* Top Grid */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
-          <div>
-            <a href="/" className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-700">
-                <Shield className="h-4 w-4 text-white" />
-              </div>
+    <footer className="overflow-hidden border-t border-[#DCE8F7] bg-[#071120] text-white">
+      
+      <div className="mx-auto max-w-[1600px] px-[140px] py-25 pb-10">
+        
+        {/* TOP LINKS */}
+        <div className="grid grid-cols-2 gap-y-10 md:grid-cols-4 md:gap-[55px]">
+          
+          {Object.entries(footerLinks).map(([title, links]) => (
+            <div key={title}>
+              
+              <h3 className="text-[17px] font-semibold tracking-[-0.3px] text-white">
+                {title}
+              </h3>
 
-              <h2 className="text-[20px] font-semibold">InsureIndia</h2>
+              <ul className="mt-5 flex flex-col gap-3.5">
+                
+                {links.map((link) => (
+                  <li key={link}>
+                    <a
+                      href="/"
+                      className="text-[14px] font-normal text-[#94A3B8] transition-all duration-300 hover:text-[#60A5FA]"
+                    >
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* ACCORDION STRIPS */}
+        <div className="mt-[45px] flex flex-col gap-3">
+          
+          {accordions.map((item, index) => (
+            <button
+              key={index}
+              className="flex h-[62px] items-center justify-between rounded-[16px] border border-[#132238] bg-[#0B1727] px-5 transition-all duration-300 hover:border-[#2563EB]"
+            >
+              <span className="text-[15px] font-medium tracking-[-0.2px] text-white">
+                {item}
+              </span>
+
+              <ChevronDown className="h-4.5 w-4.5 text-[#94A3B8]" />
+            </button>
+          ))}
+        </div>
+
+        {/* BOTTOM */}
+        <div className="mt-[55px] flex flex-col gap-10 border-t border-[#132238] py-[40px] lg:flex-row lg:items-end lg:justify-between">
+          
+          {/* LEFT */}
+          <div>
+            
+            {/* LOGO */}
+            <a href="/" className="flex items-center">
+    
+              <img
+                src={logo}
+                alt="Spay Insurance"
+                className="h-23 w-auto object-contain"
+              />
             </a>
 
-            <p className="mt-3 max-w-sm text-[13px] leading-6 text-gray-400">
-              Your trusted partner for health insurance. We help you find the
-              best coverage from top Indian insurance companies.
+            {/* COMPANY */}
+            <h3 className="mt-5 text-[18px] font-semibold leading-[1.5] tracking-[-0.3px] text-white">
+              || Provided by Spay Fintech Pvt. Ltd.
+            </h3>
+
+            {/* ADDRESS */}
+            <p className="mt-4 max-w-[470px] text-[14px] leading-[1.8] text-[#94A3B8]">
+              316 Laxmi Plaza, Laxmi Industrial Estate,
+              Andheri West, Mumbai,
+              Maharashtra - 400053.
             </p>
+
+            {/* SMALL TEXT */}
+            <div className="mt-6 space-y-2">
+
+              <p className="text-[12px] text-[#64748B]">
+                All insurance partners are IRDAI approved.
+              </p>
+
+              <p className="text-[12px] text-[#64748B]">
+                © 2026 InsureIndia. All rights reserved.
+              </p>
+            </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="mb-3 text-[15px] font-semibold">Quick Links</h3>
-
-            <ul className="space-y-2 text-[14px] text-gray-300">
-              <li>
-                <a
-                  href="/"
-                  className="transition duration-200 hover:text-emerald-400"
+          {/* RIGHT */}
+          <div className="flex flex-col items-start lg:items-end">
+            
+            {/* SOCIAL */}
+            <div className="flex items-center gap-3">
+              
+              {[
+              ].map((Icon, index) => (
+                <button
+                  key={index}
+                  className="flex h-[44px] w-[44px] items-center justify-center rounded-full border border-[#1E293B] bg-[#0B1727] transition-all duration-300 hover:border-[#2563EB] hover:bg-[#111F33]"
                 >
-                  Home
-                </a>
-              </li>
+                  <Icon className="h-4 w-4 text-white" />
+                </button>
+              ))}
+            </div>
 
-              <li>
-                <a
-                  href="#products"
-                  className="transition duration-200 hover:text-emerald-400"
-                >
-                  Health Plans
-                </a>
-              </li>
+            {/* BADGES */}
+            <div className="mt-[40px] flex items-center gap-3">
+              
+              <div className="flex h-[58px] w-[58px] items-center justify-center rounded-[14px] border border-[#1E293B] bg-[#0B1727]">
+                <span className="text-[11px] font-semibold text-white">
+                  PCI
+                </span>
+              </div>
 
-              <li>
-                <a
-                  href="#why-us"
-                  className="transition duration-200 hover:text-emerald-400"
-                >
-                  Why Choose Us
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#companies"
-                  className="transition duration-200 hover:text-emerald-400"
-                >
-                  Our Partners
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Insurance Types */}
-          <div>
-            <h3 className="mb-3 text-[15px] font-semibold">Insurance Types</h3>
-
-            <ul className="space-y-2 text-[14px] text-gray-300">
-              <li>
-                <a
-                  href="#products"
-                  className="transition duration-200 hover:text-emerald-400"
-                >
-                  Individual Health
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#products"
-                  className="transition duration-200 hover:text-emerald-400"
-                >
-                  Family Floater
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#products"
-                  className="transition duration-200 hover:text-emerald-400"
-                >
-                  Senior Citizen
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#products"
-                  className="transition duration-200 hover:text-emerald-400"
-                >
-                  Critical Illness
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="mb-3 text-[15px] font-semibold">Contact Us</h3>
-
-            <div className="space-y-3 text-[14px] text-gray-300">
-              <a
-                href="tel:18001234567"
-                className="flex items-start gap-2 transition duration-200 hover:text-emerald-400"
-              >
-                <Phone className="mt-1 h-4 w-4 flex-shrink-0" />
-
-                <span className="leading-6">+91 8450007614</span>
-              </a>
-
-              <a
-                href="mailto:support@insureindia.com"
-                className="flex items-start gap-2 transition duration-200 hover:text-emerald-400"
-              >
-                <Mail className="mt-1 h-4 w-4 flex-shrink-0" />
-
-                <span className="leading-6">inquiry@spay.live</span>
-              </a>
-
-              <div className="flex items-start gap-2">
-                <MapPin className="mt-1 h-4 w-4 flex-shrink-0" />
-
-                <span className="leading-6">
-                  316 Laxmi Plaza,
-                  <br />
-                  Laxmi Industrial Estate,
-                  <br />
-                  Andheri West,
-                  <br />
-                  Mumbai, Maharashtra - 400053.
+              <div className="flex h-[58px] w-[58px] items-center justify-center rounded-[14px] border border-[#1E293B] bg-[#0B1727]">
+                <span className="text-[11px] font-semibold text-white">
+                  IRDAI
                 </span>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="my-6 border-t border-white/10" />
-
-        {/* Bottom */}
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-[13px] text-gray-300">
-              © 2026 InsureIndia. All Rights Reserved | Powered by Spay Fintech
-              Private Limited
-            </p>
-          </div>
-
-          {/* Policies */}
-          <div className="flex flex-wrap gap-4 text-[13px] text-gray-300">
-            <a className="transition duration-200 hover:text-emerald-400 cursor-pointer">
-              Privacy Policy
-            </a>
-
-            <a className="transition duration-200 hover:text-emerald-400 cursor-pointer">
-              Terms of Service
-            </a>
-
-            <a className="transition duration-200 hover:text-emerald-400 cursor-pointer">
-              IRDAI License
-            </a>
           </div>
         </div>
       </div>

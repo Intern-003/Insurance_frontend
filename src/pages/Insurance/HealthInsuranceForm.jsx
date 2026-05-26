@@ -1,0 +1,362 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
+import {
+  ChevronRight,
+  ShieldCheck,
+  HeartPulse,
+  Check,
+  MapPin,
+  Phone,
+  User,
+} from "lucide-react";
+
+import Header from "../../components/Header";
+
+const HealthInsuranceForm = () => {
+  const [gender, setGender] = useState("Male");
+
+  const [members, setMembers] = useState(["Self"]);
+
+  const [formData, setFormData] = useState({
+    age: "25",
+    city: "",
+    fullName: "",
+    mobile: "",
+  });
+
+  const familyMembers = ["Self", "Wife", "Son", "Daughter", "Father", "Mother"];
+
+  const cities = ["Mumbai", "Pune", "Thane", "Nagpur", "Nashik", "Navi Mumbai"];
+
+  const handleMember = (member) => {
+    if (members.includes(member)) {
+      setMembers(members.filter((item) => item !== member));
+    } else {
+      setMembers([...members, member]);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#F5F7FB]">
+      {/* HEADER */}
+      <Header />
+
+      {/* MAIN */}
+      <div className="mx-auto max-w-[1500px] px-[120px] py-10 pb-10">
+        <div className="grid items-start gap-10 lg:grid-cols-[1fr_520px]">
+          {/* LEFT */}
+          <div className="sticky top-[110px] flex flex-col">
+            {/* BADGE */}
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#DCE6F5] bg-white px-5 py-2 shadow-sm">
+              <ShieldCheck className="h-4 w-4 text-[#2563EB]" />
+
+              <span className="text-[13px] font-semibold text-[#2563EB]">
+                Trusted by 5Cr+ Indians
+              </span>
+            </div>
+
+            {/* HEADING */}
+            <div className="mt-7">
+              <h1 className="text-[72px] font-black uppercase leading-[0.9] tracking-[-5px] text-[#111827]">
+                <span className="text-transparent [-webkit-text-stroke:2px_#111827]">
+                  PROTECT
+                </span>
+                <br />
+                YOUR
+                <br />
+                <span className="bg-gradient-to-r from-[#2563EB] to-[#7C3AED] bg-clip-text text-transparent">
+                  HEALTH
+                </span>
+              </h1>
+
+              <p className="mt-6 max-w-[620px] text-[16px] leading-8 text-[#64748B]">
+                Get personalised health insurance plans for yourself and your
+                family with instant premium comparison and cashless hospital
+                coverage.
+              </p>
+            </div>
+
+            {/* FEATURES */}
+            <div className="mt-10 grid grid-cols-3 gap-4">
+              <div className="rounded-[24px] border border-[#E4ECF8] bg-white p-5 shadow-sm">
+                <HeartPulse className="h-7 w-7 text-[#2563EB]" />
+
+                <h3 className="mt-4 text-[16px] font-bold text-[#111827]">
+                  Cashless hospitals
+                </h3>
+
+                <p className="mt-2 text-[13px] leading-6 text-[#64748B]">
+                  10,000+ network hospitals across India.
+                </p>
+              </div>
+
+              <div className="rounded-[24px] border border-[#E4ECF8] bg-white p-5 shadow-sm">
+                <ShieldCheck className="h-7 w-7 text-[#7C3AED]" />
+
+                <h3 className="mt-4 text-[16px] font-bold text-[#111827]">
+                  Instant approval
+                </h3>
+
+                <p className="mt-2 text-[13px] leading-6 text-[#64748B]">
+                  Faster process with minimal paperwork.
+                </p>
+              </div>
+
+              <div className="rounded-[24px] border border-[#E4ECF8] bg-white p-5 shadow-sm">
+                <Check className="h-7 w-7 text-[#16A34A]" />
+
+                <h3 className="mt-4 text-[16px] font-bold text-[#111827]">
+                  Affordable plans
+                </h3>
+
+                <p className="mt-2 text-[13px] leading-6 text-[#64748B]">
+                  Compare premiums from top insurers.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT */}
+          <div className="pr-2 pb-4">
+            <div className="rounded-[32px] border border-[#E4ECF8] bg-white p-8 shadow-[0_12px_40px_rgba(37,99,235,0.08)]">
+              {/* TOP */}
+              <div>
+                <h2 className="text-[34px] font-bold leading-[1.1] tracking-[-2px] text-[#111827]">
+                  Get your personalised
+                  <br />
+                  health insurance
+                </h2>
+
+                <p className="mt-3 text-[14px] leading-7 text-[#64748B]">
+                  Fill your details and explore plans specially curated for you.
+                </p>
+              </div>
+
+              {/* GENDER */}
+              <div className="mt-8">
+                <label className="mb-3 block text-[14px] font-semibold text-[#111827]">
+                  Select gender
+                </label>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setGender("Male")}
+                    className={`h-[52px] flex-1 rounded-[16px] border text-[15px] font-semibold transition-all ${
+                      gender === "Male"
+                        ? "border-[#2563EB] bg-[#EEF5FF] text-[#2563EB]"
+                        : "border-[#DCE6F5] bg-white text-[#111827]"
+                    }`}
+                  >
+                    Male
+                  </button>
+
+                  <button
+                    onClick={() => setGender("Female")}
+                    className={`h-[52px] flex-1 rounded-[16px] border text-[15px] font-semibold transition-all ${
+                      gender === "Female"
+                        ? "border-[#2563EB] bg-[#EEF5FF] text-[#2563EB]"
+                        : "border-[#DCE6F5] bg-white text-[#111827]"
+                    }`}
+                  >
+                    Female
+                  </button>
+                </div>
+              </div>
+
+              {/* MEMBERS */}
+              <div className="mt-8">
+                <label className="mb-4 block text-[14px] font-semibold text-[#111827]">
+                  Select members you want to insure
+                </label>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {familyMembers.map((member, index) => {
+                    const active = members.includes(member);
+
+                    return (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => handleMember(member)}
+                        className={`flex h-[58px] items-center gap-3 rounded-[18px] border px-4 text-left transition-all ${
+                          active
+                            ? "border-[#2563EB] bg-[#EEF5FF]"
+                            : "border-[#DCE6F5] bg-white"
+                        }`}
+                      >
+                        <div
+                          className={`flex h-5 w-5 items-center justify-center rounded-md border ${
+                            active
+                              ? "border-[#2563EB] bg-[#2563EB]"
+                              : "border-[#CBD5E1]"
+                          }`}
+                        >
+                          {active && <Check className="h-3 w-3 text-white" />}
+                        </div>
+
+                        <span
+                          className={`text-[14px] font-semibold ${
+                            active ? "text-[#2563EB]" : "text-[#111827]"
+                          }`}
+                        >
+                          {member}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* AGE */}
+              <div className="mt-8">
+                <label className="mb-2 block text-[14px] font-semibold text-[#111827]">
+                  Your age
+                </label>
+
+                <select
+                  value={formData.age}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      age: e.target.value,
+                    })
+                  }
+                  className="h-[56px] w-full rounded-[18px] border border-[#DCE6F5] bg-[#FBFDFF] px-4 text-[15px] font-medium text-[#111827] outline-none focus:border-[#2563EB]"
+                >
+                  {Array.from({ length: 83 }, (_, i) => i + 18).map((age) => (
+                    <option key={age}>{age} yr</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* CITY */}
+              <div className="mt-8">
+                <label className="mb-2 block text-[14px] font-semibold text-[#111827]">
+                  Select your city
+                </label>
+
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#64748B]" />
+
+                  <input
+                    type="text"
+                    value={formData.city}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        city: e.target.value,
+                      })
+                    }
+                    placeholder="Search your city"
+                    className="h-[56px] w-full rounded-[18px] border border-[#DCE6F5] bg-[#FBFDFF] pl-12 pr-4 text-[15px] font-medium text-[#111827] outline-none focus:border-[#2563EB]"
+                  />
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {cities.map((city, index) => (
+                    <button
+                      key={index}
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          city,
+                        })
+                      }
+                      className="rounded-full border border-[#DCE6F5] bg-white px-4 py-2 text-[13px] font-medium text-[#475569] transition-all hover:border-[#2563EB] hover:text-[#2563EB]"
+                    >
+                      {city}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* NAME */}
+              <div className="mt-8">
+                <label className="mb-2 block text-[14px] font-semibold text-[#111827]">
+                  Full name
+                </label>
+
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#64748B]" />
+
+                  <input
+                    type="text"
+                    value={formData.fullName}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        fullName: e.target.value,
+                      })
+                    }
+                    placeholder="Enter your full name"
+                    className="h-[56px] w-full rounded-[18px] border border-[#DCE6F5] bg-[#FBFDFF] pl-12 pr-4 text-[15px] font-medium text-[#111827] outline-none focus:border-[#2563EB]"
+                  />
+                </div>
+              </div>
+
+              {/* MOBILE */}
+              <div className="mt-6">
+                <label className="mb-2 block text-[14px] font-semibold text-[#111827]">
+                  Mobile number
+                </label>
+
+                <div className="relative">
+                  <Phone className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#64748B]" />
+
+                  <input
+                    type="text"
+                    value={formData.mobile}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        mobile: e.target.value,
+                      })
+                    }
+                    placeholder="+91 9876543210"
+                    className="h-[56px] w-full rounded-[18px] border border-[#DCE6F5] bg-[#FBFDFF] pl-12 pr-4 text-[15px] font-medium text-[#111827] outline-none focus:border-[#2563EB]"
+                  />
+                </div>
+              </div>
+
+              {/* INFO CARD */}
+              <div className="mt-8 rounded-[24px] border border-[#DCE8FA] bg-gradient-to-r from-[#EEF5FF] to-[#F8FBFF] p-5">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm">
+                    <ShieldCheck className="h-6 w-6 text-[#2563EB]" />
+                  </div>
+
+                  <div>
+                    <h3 className="text-[16px] font-bold text-[#111827]">
+                      93+ plans found
+                    </h3>
+
+                    <p className="mt-2 text-[13px] leading-6 text-[#64748B]">
+                      Compare plans from 18+ insurers with cashless hospital
+                      coverage and instant policy issuance.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* BUTTON */}
+              <Link to="/insurance-plans">
+                <button className="mt-8 flex h-[56px] w-full items-center justify-center gap-2 rounded-[18px] bg-[#111827] text-[15px] font-semibold text-white transition-all hover:bg-black">
+                  Continue
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </Link>
+
+              <p className="mt-4 text-center text-[12px] leading-6 text-[#64748B]">
+                By continuing, you agree to our Terms & Conditions and Privacy
+                Policy.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HealthInsuranceForm;
