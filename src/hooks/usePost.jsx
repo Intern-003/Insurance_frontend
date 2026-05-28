@@ -1,38 +1,44 @@
 import { useState } from "react";
-import api from "../api/axios";
 
-export function usePost(defaultEndpoint = "") {
-  const [data, setData] = useState(null);
+import axios from "axios";
+
+export const usePost = () => {
   const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState(null);
 
-  const execute = async (body, endpoint = "", options = {}) => {
-    setLoading(true);
-    setError(null);
+  const [response, setResponse] = useState(null);
 
+  const postData = async (url, data) => {
     try {
-      const finalEndpoint = endpoint || defaultEndpoint;
+      setLoading(true);
 
-      const headers = {};
+      setError(null);
 
-      if (!(body instanceof FormData)) {
-        headers["Content-Type"] = "application/json";
-      }
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}${url}`,
+        data
+      );
 
-      const response = await api.post(finalEndpoint, body, { headers });
+      setResponse(res.data);
 
-      setData(response.data);
-      return response.data;
+      return res.data;
     } catch (err) {
-      console.log("API ERROR:", err.response?.data);
+      setError(
+        err?.response?.data?.message ||
+          "Something went wrong"
+      );
 
-      const errData = err.response?.data || "Something went wrong";
-      setError(errData);
-      throw errData;
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  return { data, loading, error, execute, setError };
-}
+  return {
+    postData,
+    loading,
+    error,
+    response,
+  };
+};
