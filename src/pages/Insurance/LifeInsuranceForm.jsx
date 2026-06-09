@@ -241,7 +241,7 @@ const LifeInsuranceForm = () => {
   return (
     <div className="min-h-screen bg-[#F4F7FF]">
       {/* HEADER */}
-      <div className="sticky top-0 z-50 border-b border-[#E6EEF9] bg-white/90 backdrop-blur-xl">
+      {/* <div className="sticky top-0 z-50 border-b border-[#E6EEF9] bg-white/90 backdrop-blur-xl">
         <div className="flex h-[82px] items-center justify-between px-[45px]">
           <Link to="/">
             <img
@@ -256,7 +256,7 @@ const LifeInsuranceForm = () => {
             Support
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* MAIN */}
       <div className="mx-auto max-w-[1450px] px-[100px] py-12">

@@ -13,7 +13,6 @@ export function useGet(endpoint) {
 
       try {
         const finalEndpoint = customEndpoint || endpoint;
-
         // 🔥 IMPORTANT CHANGE
         const response = await api.get(finalEndpoint);
 
@@ -39,3 +38,6 @@ export function useGet(endpoint) {
 
   return { data, loading, error, refetch: fetchData };
 }
+
+
+ 
