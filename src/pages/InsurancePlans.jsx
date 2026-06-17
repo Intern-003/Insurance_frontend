@@ -151,10 +151,16 @@ const InsurancePlans = () => {
                     {/* LEFT */}
                     <div className="flex flex-col justify-between border-r border-[#EEF2F7] p-4">
                       <div className="flex h-[54px] items-center justify-center rounded-[12px] border border-[#E5EDF8] bg-[#FCFDFF]">
-                        <img
+                        {console.log("LOGO URL =>", plan.logo_url)}
+                        {/* <img
                           src={plan.logo_url}
                           alt={plan.company}
                           className="h-7 object-contain"
+                        /> */}
+                        <img
+                          src={plan.logo_url}
+                          referrerPolicy="no-referrer"
+                          alt={plan.company}
                         />
                       </div>
 

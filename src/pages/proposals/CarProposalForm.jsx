@@ -27,11 +27,9 @@ const CarProposalForm = () => {
 |--------------------------------------------------------------------------
 */
 
-const renewalData =
-  getRenewalData(location);
+  const renewalData = getRenewalData(location);
 
-const renewal =
-  !!renewalData;
+  const renewal = !!renewalData;
 
   const { postData, loading } = usePost();
 
@@ -51,138 +49,71 @@ const renewal =
   |--------------------------------------------------------------------------
   */
 
-const [formData, setFormData] = useState({
-
-  /*
+  const [formData, setFormData] = useState({
+    /*
   |--------------------------------------------------------------------------
   | PERSONAL DETAILS
   |--------------------------------------------------------------------------
   */
 
-  full_name:
-    renewalData?.fullName || "",
+    full_name: renewalData?.fullName || "",
 
-  mobile:
-    renewalData?.mobile || "",
+    mobile: renewalData?.mobile || "",
 
-  email:
-    renewalData?.email || "",
+    email: renewalData?.email || "",
 
-  date_of_birth:
-    renewalData?.dateOfBirth || "",
+    date_of_birth: renewalData?.dateOfBirth || "",
 
-  gender:
-    renewalData?.customerDetails
-      ?.gender || "male",
+    gender: renewalData?.customerDetails?.gender || "male",
 
-  /*
+    /*
   |--------------------------------------------------------------------------
   | VEHICLE DETAILS
   |--------------------------------------------------------------------------
   */
 
-  registration_number:
+    registration_number:
+      renewalData?.vehicleDetails?.registration_number ||
+      renewalData?.vehicleDetails?.car_number ||
+      "",
 
-    renewalData?.vehicleDetails
-      ?.registration_number ||
+    vehicle_model:
+      renewalData?.vehicleDetails?.vehicle_model ||
+      renewalData?.vehicleDetails?.model ||
+      "",
 
-    renewalData?.vehicleDetails
-      ?.car_number ||
+    manufacturing_year: renewalData?.vehicleDetails?.manufacturing_year || "",
 
-    "",
+    fuel_type: renewalData?.vehicleDetails?.fuel_type || "petrol",
 
-  vehicle_model:
+    engine_number: renewalData?.vehicleDetails?.engine_number || "",
 
-    renewalData?.vehicleDetails
-      ?.vehicle_model ||
+    chassis_number: renewalData?.vehicleDetails?.chassis_number || "",
 
-    renewalData?.vehicleDetails
-      ?.model ||
-
-    "",
-
-  manufacturing_year:
-
-    renewalData?.vehicleDetails
-      ?.manufacturing_year ||
-
-    "",
-
-  fuel_type:
-
-    renewalData?.vehicleDetails
-      ?.fuel_type ||
-
-    "petrol",
-
-  engine_number:
-
-    renewalData?.vehicleDetails
-      ?.engine_number ||
-
-    "",
-
-  chassis_number:
-
-    renewalData?.vehicleDetails
-      ?.chassis_number ||
-
-    "",
-
-  /*
+    /*
   |--------------------------------------------------------------------------
   | ADDRESS
   |--------------------------------------------------------------------------
   */
 
-  address:
+    address: renewalData?.customerDetails?.address || "",
 
-    renewalData?.customerDetails
-      ?.address ||
+    city: renewalData?.customerDetails?.city || "",
 
-    "",
+    state: renewalData?.customerDetails?.state || "",
 
-  city:
+    pincode: renewalData?.customerDetails?.pincode || "",
 
-    renewalData?.customerDetails
-      ?.city ||
-
-    "",
-
-  state:
-
-    renewalData?.customerDetails
-      ?.state ||
-
-    "",
-
-  pincode:
-
-    renewalData?.customerDetails
-      ?.pincode ||
-
-    "",
-
-  /*
+    /*
   |--------------------------------------------------------------------------
   | NOMINEE
   |--------------------------------------------------------------------------
   */
 
-  nominee_name:
+    nominee_name: renewalData?.nomineeDetails?.nominee_name || "",
 
-    renewalData?.nomineeDetails
-      ?.nominee_name ||
-
-    "",
-
-  nominee_relation:
-
-    renewalData?.nomineeDetails
-      ?.nominee_relation ||
-
-    "",
-});
+    nominee_relation: renewalData?.nomineeDetails?.nominee_relation || "",
+  });
 
   const [error, setError] = useState("");
 
@@ -238,21 +169,15 @@ const [formData, setFormData] = useState({
 
       const payload = {
         renewal: renewal,
-insurance_plan_id:
-
-  renewalData?.insurancePlanId ||
-
-  proposalData?.insurance_plan_id,
-insurance_coverage_id:
-
-  renewalData?.insuranceCoverageId ||
-
-  proposalData?.insurance_coverage_id,
+        insurance_plan_id:
+          renewalData?.insurancePlanId || proposalData?.insurance_plan_id,
+        insurance_coverage_id:
+          renewalData?.insuranceCoverageId ||
+          proposalData?.insurance_coverage_id,
 
         category: "car",
 
-        premium_amount:
-          proposalData?.premium_amount,
+        premium_amount: proposalData?.premium_amount,
 
         tenure: proposalData?.tenure || 1,
 
@@ -268,8 +193,7 @@ insurance_coverage_id:
 
         mobile: formData.mobile,
 
-        date_of_birth:
-          formData.date_of_birth,
+        date_of_birth: formData.date_of_birth,
 
         /*
         |--------------------------------------------------------------------------
@@ -284,8 +208,7 @@ insurance_coverage_id:
 
           mobile: formData.mobile,
 
-          date_of_birth:
-            formData.date_of_birth,
+          date_of_birth: formData.date_of_birth,
 
           gender: formData.gender,
 
@@ -305,23 +228,17 @@ insurance_coverage_id:
         */
 
         vehicle_details: {
-          registration_number:
-            formData.registration_number,
+          registration_number: formData.registration_number,
 
-          vehicle_model:
-            formData.vehicle_model,
+          vehicle_model: formData.vehicle_model,
 
-          manufacturing_year:
-            formData.manufacturing_year,
+          manufacturing_year: formData.manufacturing_year,
 
-          fuel_type:
-            formData.fuel_type,
+          fuel_type: formData.fuel_type,
 
-          engine_number:
-            formData.engine_number,
+          engine_number: formData.engine_number,
 
-          chassis_number:
-            formData.chassis_number,
+          chassis_number: formData.chassis_number,
         },
 
         /*
@@ -331,11 +248,9 @@ insurance_coverage_id:
         */
 
         nominee_details: {
-          nominee_name:
-            formData.nominee_name,
+          nominee_name: formData.nominee_name,
 
-          nominee_relation:
-            formData.nominee_relation,
+          nominee_relation: formData.nominee_relation,
         },
       };
 
@@ -345,10 +260,7 @@ insurance_coverage_id:
       |--------------------------------------------------------------------------
       */
 
-      const response = await postData(
-        "store-insurance-proposal",
-        payload
-      );
+      const response = await postData("store-insurance-proposal", payload);
 
       /*
       |--------------------------------------------------------------------------
@@ -357,30 +269,22 @@ insurance_coverage_id:
       */
 
       if (response?.status) {
-navigate("/checkout", {
-  state: {
+        navigate("/checkout", {
+          state: {
+            proposal: response?.proposal,
 
-    proposal:
-      response?.proposal,
+            premium_amount: proposalData?.premium_amount,
 
-    premium_amount:
-      proposalData?.premium_amount,
+            renewal: renewal,
 
-    renewal:
-      renewal,
-
-    renewalData:
-      renewalData,
-  },
-});
+            renewalData: renewalData,
+          },
+        });
       }
     } catch (err) {
       console.log(err);
 
-      setError(
-        err?.response?.data?.message ||
-          "Something went wrong"
-      );
+      setError(err?.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -407,8 +311,7 @@ navigate("/checkout", {
             </h2>
 
             <p className="mt-3 text-[14px] leading-7 text-slate-300">
-              Complete your proposal form to continue
-              with policy issuance.
+              Complete your proposal form to continue with policy issuance.
             </p>
 
             {/* STEPS */}
@@ -417,9 +320,7 @@ navigate("/checkout", {
                 <CheckCircle2 className="h-5 w-5 text-green-400" />
 
                 <div>
-                  <p className="text-[14px] font-semibold">
-                    Plan Selected
-                  </p>
+                  <p className="text-[14px] font-semibold">Plan Selected</p>
 
                   <p className="text-[12px] text-slate-300">
                     Premium finalized
@@ -431,9 +332,7 @@ navigate("/checkout", {
                 <Shield className="h-5 w-5 text-blue-400" />
 
                 <div>
-                  <p className="text-[14px] font-semibold">
-                    Proposal Form
-                  </p>
+                  <p className="text-[14px] font-semibold">Proposal Form</p>
 
                   <p className="text-[12px] text-slate-300">
                     Fill personal details
@@ -445,9 +344,7 @@ navigate("/checkout", {
                 <FileText className="h-5 w-5 text-yellow-300" />
 
                 <div>
-                  <p className="text-[14px] font-semibold">
-                    Checkout
-                  </p>
+                  <p className="text-[14px] font-semibold">Checkout</p>
 
                   <p className="text-[12px] text-slate-300">
                     Payment & invoice
@@ -463,9 +360,7 @@ navigate("/checkout", {
               </p>
 
               <h3 className="mt-2 text-[36px] font-black">
-                ₹
-                {proposalData?.premium_amount ||
-                  "5305"}
+                ₹{proposalData?.premium_amount || "5305"}
               </h3>
 
               <p className="mt-1 text-[13px] text-slate-300">
@@ -484,18 +379,18 @@ navigate("/checkout", {
                 </h1>
 
                 <p className="mt-2 text-[14px] text-slate-500">
-                  Fill all required details carefully
-                  for faster policy issuance.
+                  Fill all required details carefully for faster policy
+                  issuance.
                 </p>
                 {renewal && (
-  <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#EFF6FF] px-4 py-2">
-    <CheckCircle2 className="h-4 w-4 text-[#2563EB]" />
+                  <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#EFF6FF] px-4 py-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#2563EB]" />
 
-    <span className="text-[12px] font-semibold text-[#2563EB]">
-      Renewal Policy Detected
-    </span>
-  </div>
-)}
+                    <span className="text-[12px] font-semibold text-[#2563EB]">
+                      Renewal Policy Detected
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div className="rounded-2xl bg-[#EEF2FF] px-5 py-3">
@@ -545,9 +440,7 @@ navigate("/checkout", {
                 {/* DOB */}
                 <Input
                   type="date"
-                  icon={
-                    <Calendar className="h-4 w-4 text-slate-500" />
-                  }
+                  icon={<Calendar className="h-4 w-4 text-slate-500" />}
                   label="Date Of Birth"
                   name="date_of_birth"
                   value={formData.date_of_birth}
@@ -566,17 +459,11 @@ navigate("/checkout", {
                     onChange={handleChange}
                     className="h-[56px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-[14px] outline-none"
                   >
-                    <option value="male">
-                      Male
-                    </option>
+                    <option value="male">Male</option>
 
-                    <option value="female">
-                      Female
-                    </option>
+                    <option value="female">Female</option>
 
-                    <option value="other">
-                      Other
-                    </option>
+                    <option value="other">Other</option>
                   </select>
                 </div>
 
@@ -612,9 +499,7 @@ navigate("/checkout", {
                 <Input
                   label="Car Number"
                   name="registration_number"
-                  value={
-                    formData.registration_number
-                  }
+                  value={formData.registration_number}
                   onChange={handleChange}
                   placeholder="MH12AB1234"
                 />
@@ -630,9 +515,7 @@ navigate("/checkout", {
                 <Input
                   label="Manufacturing Year"
                   name="manufacturing_year"
-                  value={
-                    formData.manufacturing_year
-                  }
+                  value={formData.manufacturing_year}
                   onChange={handleChange}
                   placeholder="2023"
                 />
@@ -649,21 +532,13 @@ navigate("/checkout", {
                     onChange={handleChange}
                     className="h-[56px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-[14px] outline-none"
                   >
-                    <option value="petrol">
-                      Petrol
-                    </option>
+                    <option value="petrol">Petrol</option>
 
-                    <option value="diesel">
-                      Diesel
-                    </option>
+                    <option value="diesel">Diesel</option>
 
-                    <option value="electric">
-                      Electric
-                    </option>
+                    <option value="electric">Electric</option>
 
-                    <option value="cng">
-                      CNG
-                    </option>
+                    <option value="cng">CNG</option>
                   </select>
                 </div>
 
@@ -703,9 +578,7 @@ navigate("/checkout", {
                 <Input
                   label="Nominee Relation"
                   name="nominee_relation"
-                  value={
-                    formData.nominee_relation
-                  }
+                  value={formData.nominee_relation}
                   onChange={handleChange}
                   placeholder="Father / Mother / Wife"
                 />
@@ -725,13 +598,9 @@ navigate("/checkout", {
               disabled={loading}
               className="mt-8 flex h-[58px] w-full items-center justify-center gap-2 rounded-2xl bg-[#0F172A] text-[15px] font-bold text-white transition-all duration-300 hover:bg-[#1E293B] disabled:opacity-70"
             >
-              {loading
-                ? "Submitting..."
-                : "Proceed To Checkout"}
+              {loading ? "Submitting..." : "Proceed To Checkout"}
 
-              {!loading && (
-                <ChevronRight className="h-5 w-5" />
-              )}
+              {!loading && <ChevronRight className="h-5 w-5" />}
             </button>
           </div>
         </div>
