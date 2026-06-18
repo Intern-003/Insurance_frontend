@@ -1,4 +1,6 @@
 import React, { useMemo } from "react";
+import { useEffect } from "react";
+
 import {
   ShieldCheck,
   FileText,
@@ -14,7 +16,7 @@ import {
 } from "lucide-react";
 
 import { useLocation, useNavigate } from "react-router-dom";
-
+import axios from "axios";
 import { usePost } from "../../hooks/usePost";
 
 const CheckoutPage = () => {
@@ -61,25 +63,185 @@ const CheckoutPage = () => {
     }
   }, [proposal]);
 
-  const handlePaymentComplete = async () => {
-    try {
-      const response = await postData("complete-payment", {
-        application_number: proposal?.application_number,
-        renewal,
-        old_policy_id: renewalData?.id || null,
-      });
 
-      if (response?.status) {
-        navigate("/policy-success", {
-          state: {
-            proposal: response?.proposal,
-          },
-        });
+
+const handlePaymentComplete = async () => {
+  try {
+
+    const orderResponse = await axios.post(
+      "https://insurance.spay.live/Backend/laravel_project/public/api/create-order",
+      {
+        amount: total,
       }
-    } catch (error) {
-      console.log("PAYMENT ERROR :", error);
+    );
+
+    if (!orderResponse?.data?.success) {
+
+      alert("Unable to create payment order");
+
+      return;
     }
+
+    const options = {
+
+      key: import.meta.env.VITE_RAZORPAY_KEY,
+
+      order_id: orderResponse.data.order_id,
+
+      currency: "INR",
+
+      name: "SPAY FINTECH PRIVATE LIMITED",
+
+      description: "Insurance Premium Payment",
+
+      image:
+        "https://spay.live/spayliveBackend/storage/blogs/logo-spay.png",
+
+      prefill: {
+
+        name: proposal?.full_name || "",
+
+        email:
+          proposal?.email ||
+          proposal?.payer_email ||
+          "",
+
+        contact:
+          proposal?.mobile ||
+          proposal?.phone ||
+          ""
+      },
+
+      theme: {
+        color: "#2952ff",
+      },
+
+      modal: {
+        escape: false,
+      },
+
+      handler: async function (response) {
+
+        try {
+
+          const verifyResponse = await axios.post(
+            "https://insurance.spay.live/Backend/laravel_project/public/api/verify-payment",
+            {
+              razorpay_order_id:
+                response.razorpay_order_id,
+
+              razorpay_payment_id:
+                response.razorpay_payment_id,
+
+              razorpay_signature:
+                response.razorpay_signature,
+            }
+          );
+
+          if (!verifyResponse.data.success) {
+
+            alert("Payment verification failed");
+
+            return;
+          }
+
+          const completeResponse = await postData(
+            "complete-payment",
+            {
+              application_number:
+                proposal?.application_number,
+
+              renewal,
+
+              old_policy_id:
+                renewalData?.id || null,
+
+              transaction_id:
+                response.razorpay_payment_id,
+            }
+          );
+
+          if (completeResponse?.status) {
+
+            navigate("/policy-success", {
+              state: {
+                proposal:
+                  completeResponse.proposal,
+
+                renewal,
+
+                renewalData,
+              },
+            });
+
+          } else {
+
+            alert(
+              completeResponse?.message ||
+              "Unable to generate policy"
+            );
+          }
+
+        } catch (error) {
+
+          console.error(
+            "Verification Error",
+            error
+          );
+
+          alert(
+            "Payment verification failed"
+          );
+        }
+      }
+    };
+
+    const razorpay = new window.Razorpay(options);
+
+    razorpay.on(
+      "payment.failed",
+      function (response) {
+
+        console.error(
+          "Payment Failed",
+          response.error
+        );
+
+        alert(
+          response.error.description ||
+          "Payment Failed"
+        );
+      }
+    );
+
+    razorpay.open();
+
+  } catch (error) {
+
+    console.error(
+      "Create Order Error",
+      error
+    );
+
+    alert(
+      "Unable to initiate payment"
+    );
+  }
+};
+useEffect(() => {
+  const script = document.createElement("script");
+
+  script.src =
+    "https://checkout.razorpay.com/v1/checkout.js";
+
+  script.async = true;
+
+  document.body.appendChild(script);
+
+  return () => {
+    document.body.removeChild(script);
   };
+}, []);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -180,27 +342,7 @@ const CheckoutPage = () => {
               <p className="mt-2 text-sm text-slate-500">Inclusive of GST</p>
             </div>
 
-            {/* QR */}
-
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <div className="flex items-center gap-3">
-                <QrCode className="h-5 w-5 text-indigo-600" />
-
-                <h3 className="font-semibold text-slate-900">Scan & Pay</h3>
-              </div>
-
-              <div className="mt-4 rounded-xl border border-slate-200 p-3">
-                <img
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=SPAY-INSURANCE"
-                  alt="QR Code"
-                  className="mx-auto h-44 w-44"
-                />
-              </div>
-
-              <p className="mt-3 text-center text-xs text-slate-500">
-                UPI / QR Payment Supported
-              </p>
-            </div>
+  
           </div>
 
           {/* RIGHT CONTENT */}
