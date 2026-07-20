@@ -50,11 +50,11 @@ const faqs = [
     answer:
       "Yes, policy renewals can be completed instantly through your customer dashboard.",
   },
-  {
-    question: "Are all insurers verified?",
-    answer:
-      "Yes, all insurance providers listed on our platform are IRDAI-approved and verified.",
-  },
+  // {
+  //   question: "Are all insurers verified?",
+  //   answer:
+  //     "Yes, all insurance providers listed on our platform are IRDAI-approved and verified.",
+  // },
   {
     question: "How can I contact support?",
     answer:

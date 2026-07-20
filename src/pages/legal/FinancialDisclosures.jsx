@@ -98,7 +98,7 @@ const FinancialDisclosures = () => {
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
 
               {[
-                "IRDAI Compliance Focused",
+                // "IRDAI Compliance Focused",
                 "Transparent Revenue Models",
                 "Verified Insurance Partners",
                 "Clear Customer Disclosures",

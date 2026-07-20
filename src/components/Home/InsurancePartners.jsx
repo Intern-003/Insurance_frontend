@@ -58,9 +58,9 @@ const InsurancePartners = () => {
         {/* FOOTER */}
         <div className="mt-[38px] text-center">
           
-          <p className="text-[13px] font-normal text-[#A0AEC0]">
+          {/* <p className="text-[13px] font-normal text-[#A0AEC0]">
             All insurance companies are IRDAI registered and regulated
-          </p>
+          </p> */}
         </div>
       </div>
     </section>

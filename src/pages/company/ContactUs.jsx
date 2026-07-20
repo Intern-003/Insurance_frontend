@@ -13,13 +13,13 @@ const contactCards = [
   {
     icon: Phone,
     title: "Call Us",
-    value: "+91 98765 43210",
+    value: "+91 84500 07614",
     description: "Talk directly with our insurance experts.",
   },
   {
     icon: Mail,
     title: "Email Support",
-    value: "support@spayinsurance.com",
+    value: "inquiry@spay.live",
     description: "Get assistance for claims and renewals.",
   },
   {
@@ -36,11 +36,11 @@ const faqs = [
     answer:
       "Most digital claims are processed within 24 to 72 hours depending on policy verification.",
   },
-  {
-    question: "Are all insurance providers verified?",
-    answer:
-      "Yes, all insurance providers listed on our platform are IRDAI approved and verified.",
-  },
+  // {
+  //   question: "Are all insurance providers verified?",
+  //   answer:
+  //     "Yes, all insurance providers listed on our platform are IRDAI approved and verified.",
+  // },
   {
     question: "Can I renew my policy online?",
     answer:
@@ -135,12 +135,12 @@ const ContactUs = () => {
                   {
                     icon: Phone,
                     title: "Call Us",
-                    value: "<PHONE>",
+                    value: "+91 84500 07614",
                   },
                   {
                     icon: Mail,
                     title: "Email",
-                    value: "support@spay.live",
+                    value: "inquiry@spay.live",
                   },
                   {
                     icon: Clock3,

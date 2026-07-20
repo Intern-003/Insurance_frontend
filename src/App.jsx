@@ -75,7 +75,9 @@ function App() {
         <Route path="/insurance/bike" element={<BikeInsuranceForm />} />
         <Route path="/insurance/travel" element={<TravelInsuranceForm />} />
         <Route path="/insurance/airpass" element={<AirPassForm />} />
-        <Route path="/insurance/life" element={<LifeInsuranceForm />} />
+      <Route element={<MainLayout />}>
+  <Route path="/insurance/life" element={<LifeInsuranceForm />} />
+</Route> 
 
         <Route
           path="/car-insurance-details"

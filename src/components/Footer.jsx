@@ -106,9 +106,9 @@ const Footer = () => {
                 </div>
 
                 <div>
-                  <h3 className="text-[13px] font-semibold text-white">
+                  {/* <h3 className="text-[13px] font-semibold text-white">
                     IRDAI Approved
-                  </h3>
+                  </h3> */}
 
                   <p className="mt-0.5 text-[11px] text-[#64748B]">
                     Trusted insurance partners
@@ -233,7 +233,7 @@ const Footer = () => {
             {/* CENTER */}
             <div>
               <p className="text-center text-[11px] leading-[1.8] text-[#94A3B8]">
-                All insurance partners are IRDAI approved. <br />
+                {/* All insurance partners are IRDAI approved. <br /> */}
                 Insurance is the subject matter of solicitation.
               </p>
             </div>
@@ -247,9 +247,9 @@ const Footer = () => {
 
               <div className="flex flex-wrap items-center gap-2">
                 
-                <div className="rounded-[10px] border border-[#2563EB] bg-[#071120] px-4 py-2 text-[10px] font-semibold text-white">
+                {/* <div className="rounded-[10px] border border-[#2563EB] bg-[#071120] px-4 py-2 text-[10px] font-semibold text-white">
                   IRDAI VERIFIED
-                </div>
+                </div> */}
 
                 <div className="rounded-[10px] border border-[#16A34A] bg-[#071120] px-4 py-2 text-[10px] font-semibold text-white">
                   PCI DSS COMPLIANT

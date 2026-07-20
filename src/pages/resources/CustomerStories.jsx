@@ -522,7 +522,7 @@ const CustomerStories = () => {
 
                 {[
                   "Fast and transparent claims process",
-                  "Trusted IRDAI-approved insurance partners",
+                  // "Trusted IRDAI-approved insurance partners",
                   "Dedicated support for renewals and assistance",
                   "Completely digital insurance management",
                   "Secure and compliant policy management",
