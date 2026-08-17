@@ -103,11 +103,11 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="bg-blue-50 rounded-lg p-4">
+          {/* <div className="bg-blue-50 rounded-lg p-4">
             <p className="text-xs text-blue-800 mb-2">Demo Admin Credentials:</p>
             <p className="text-xs text-blue-700">Email: testadmin@gmail.com</p>
             <p className="text-xs text-blue-700">Password: testadmin@123</p>
-          </div>
+          </div> */}
 
           <button
             type="submit"
