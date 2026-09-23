@@ -179,6 +179,13 @@ const Header = () => {
       Help Center
     </Link>
 
+   <Link
+      to="/refund"
+      className="block rounded-xl px-4 py-3 text-sm text-[#334155] hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+    >
+      Refund And Cancellation
+    </Link>
+
     <Link
       to="/terms-and-conditions"
       className="block rounded-xl px-4 py-3 text-sm text-[#334155] hover:bg-[#F8FAFC] hover:text-[#2563EB]"

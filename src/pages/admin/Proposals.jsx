@@ -530,7 +530,7 @@ export default function Proposals() {
             </div>
           </div>
         </div>
-      )}
+      )}   
 
       {/* Status Update Modal */}
       {showStatusModal && selectedProposal && (

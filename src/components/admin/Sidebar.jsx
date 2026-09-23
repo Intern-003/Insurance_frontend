@@ -21,6 +21,7 @@ const navigation = [
   { name: "Proposals", href: "/admin/proposals", icon: FileText, color: "text-orange-500" },
   { name: "Renewals", href: "/admin/renewals", icon: RefreshCw, color: "text-teal-500" },
   { name: "Settings", href: "/admin/settings", icon: Settings, color: "text-gray-500" },
+  { name: "Refund Requests", href: "/admin/refund-requests", icon: RefreshCw, color: "text-red-500" },
 ];
 
 export default function Sidebar() {

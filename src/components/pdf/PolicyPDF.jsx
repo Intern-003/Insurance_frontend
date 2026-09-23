@@ -329,7 +329,7 @@ const PolicyPDF = ({ policyData }) => {
                 </p>
 
                 <h3 className="font-semibold text-lg">
-                  support@spay.live
+                  inquiry@spay.live
                 </h3>
               </div>
 
@@ -339,7 +339,7 @@ const PolicyPDF = ({ policyData }) => {
                 </p>
 
                 <h3 className="font-semibold text-lg">
-                  +91 9876543210
+                  +91 8450007614
                 </h3>
               </div>
 

@@ -221,7 +221,7 @@ const PolicySuccessPage = () => {
     doc.setFontSize(10);
 
     doc.text(
-      "SPAY Insurance Pvt Ltd • support@spay.live • www.spay.live",
+      "SPAY Insurance Pvt Ltd • inquiry@spay.live • www.spay.live",
       14,
       288,
     );
@@ -497,7 +497,9 @@ const PolicySuccessPage = () => {
                   </p>
 
                   <h3 className="text-[18px] font-bold text-[#071437]">
-                    support@spay.live
+                    inquiry@spay.live
+
+
                   </h3>
                 </div>
 
@@ -507,7 +509,7 @@ const PolicySuccessPage = () => {
                   </p>
 
                   <h3 className="text-[18px] font-bold text-[#071437]">
-                    +91 9876543210
+                    +91 8450007614
                   </h3>
                 </div>
 

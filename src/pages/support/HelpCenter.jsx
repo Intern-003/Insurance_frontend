@@ -572,13 +572,13 @@ const HelpCenter = () => {
               {
                 icon: Phone,
                 title: "Call Support",
-                value: "+91 XXXXX XXXXX",
+                value: "+91 8450007614",
                 desc: "Speak directly with our support specialists.",
               },
               {
                 icon: Mail,
                 title: "Email Support",
-                value: "support@yourdomain.com",
+                value: "inquiry@spay.live",
                 desc: "Receive detailed assistance via email.",
               },
               {

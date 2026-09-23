@@ -7,6 +7,7 @@ import InsurancePlans from "./pages/InsurancePlans";
 import CustomizeInsurancePlan from "./pages/CustomizeInsurancePlan";
 import MainLayout from "./layouts/MainLayout";
 import HelpCenter from "./pages/support/HelpCenter";
+import Refund from "./pages/support/refund";
 import PolicySuccessPage from "./pages/Insurance/PolicySuccessPage";
 
 import LifeInsuranceForm from "./pages/Insurance/LifeInsuranceForm";
@@ -58,6 +59,7 @@ import Proposals from "./pages/admin/Proposals";
 import PlanForm from "./components/admin/PlanForm";
 import PrivateRoute from "./components/PrivateRoute";
 import Renewals from "./pages/admin/Renewals";
+import RefundRequests from "./pages/admin/refundrequests";
 
 import Razorpay from "./pages/razorpay";
 
@@ -119,11 +121,13 @@ function App() {
           <Route path="/careers" element={<Careers />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/resources" element={<Resources />} />
+          <Route path="/refund"element={<Refund />}/>
           <Route path="/customer-stories" element={<CustomerStories />} />
           <Route path="/articles" element={<Articles />} />
           <Route path="/ebooks" element={<Ebooks />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-and-conditions" element={<TermsConditions />} />
+
           <Route
             path="/financial-disclosures"
             element={<FinancialDisclosures />}
@@ -145,6 +149,7 @@ function App() {
             <Route path="plans/:id/edit" element={<PlanForm />} />
             <Route path="proposals" element={<Proposals />} />
             <Route path="renewals" element={<Renewals />} />
+            <Route path="refund-requests" element={<RefundRequests />} />
           </Route>
         </Route>
       </Routes>

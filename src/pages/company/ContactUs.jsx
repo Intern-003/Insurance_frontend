@@ -422,7 +422,7 @@ const ContactUs = () => {
 
               <input
                 type="email"
-                placeholder="you@example.com"
+                placeholder="inquiry@spay.live"
                 className="h-[52px] w-full rounded-xl border border-[#1E293B] bg-[#071120] px-4 text-[14px] outline-none transition-all duration-300 focus:border-[#2563EB]"
               />
 
